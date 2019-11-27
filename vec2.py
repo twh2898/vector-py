@@ -37,7 +37,7 @@ class Vec2(object):
         else:
             raise IndexError("Invalid subscript "+str(key)+" to Vec2")
 
-    # String representaion (for debugging)
+    # String representation (for debugging)
     def __repr__(self):
         return 'Vec2(%s, %s)' % (self.x, self.y)
 
@@ -80,7 +80,7 @@ class Vec2(object):
                         f(other, self.y))
 
     def _io(self, other, f):
-        "inplace operator"
+        "in-place operator"
         if (hasattr(other, "__getitem__")):
             self.x = f(self.x, other[0])
             self.y = f(self.y, other[1])
@@ -164,13 +164,13 @@ class Vec2(object):
 
     # Division
     def __div__(self, other):
-        return self._o2(other, operator.div)
+        return self._o2(other, operator.truediv)
 
     def __rdiv__(self, other):
-        return self._r_o2(other, operator.div)
+        return self._r_o2(other, operator.truediv)
 
     def __idiv__(self, other):
-        return self._io(other, operator.div)
+        return self._io(other, operator.truediv)
 
     def __floordiv__(self, other):
         return self._o2(other, operator.floordiv)
@@ -198,12 +198,12 @@ class Vec2(object):
         return self._r_o2(other, operator.mod)
 
     def __divmod__(self, other):
-        return self._o2(other, operator.divmod)
+        return self._o2(other, divmod)
 
     def __rdivmod__(self, other):
-        return self._r_o2(other, operator.divmod)
+        return self._r_o2(other, divmod)
 
-    # Exponentation
+    # Exponential
     def __pow__(self, other):
         return self._o2(other, operator.pow)
 
@@ -248,7 +248,7 @@ class Vec2(object):
     def __invert__(self):
         return Vec2(-self.x, -self.y)
 
-    # vectory functions
+    # vector functions
     def get_length_sqrd(self):
         return self.x**2 + self.y**2
 
