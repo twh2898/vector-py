@@ -12,8 +12,15 @@ class Vec2(object):
 
     def __init__(self, x_or_pair, y=None):
         if y == None:
-            self.x = x_or_pair[0]
-            self.y = x_or_pair[1]
+            if isinstance(x_or_pair, Vec2):
+                self.x = x_or_pair.x
+                self.y = x_or_pair.y
+            elif (hasattr(x_or_pair, "__getitem__")):
+                self.x = x_or_pair[0]
+                self.y = x_or_pair[1]
+            else:
+                self.x = x_or_pair
+                self.y = x_or_pair
         else:
             self.x = x_or_pair
             self.y = y
@@ -360,9 +367,22 @@ class Vec3(object):
 
     def __init__(self, x_or_triple, y=None, z=None):
         if y == None:
-            self.x = x_or_triple[0]
-            self.y = x_or_triple[1]
-            self.z = x_or_triple[2]
+            if isinstance(x_or_triple, Vec3):
+                self.x = x_or_triple.x
+                self.y = x_or_triple.y
+                self.z = x_or_triple.z
+            elif (hasattr(x_or_triple, "__getitem__")):
+                self.x = x_or_triple[0]
+                self.y = x_or_triple[1]
+                self.z = x_or_triple[2]
+            else:
+                self.x = x_or_triple
+                self.y = x_or_triple
+                self.z = x_or_triple
+        elif z == None and isinstance(x_or_triple, Vec2):
+            self.x = x_or_triple.x
+            self.y = x_or_triple.y
+            self.z = y
         else:
             self.x = x_or_triple
             self.y = y
@@ -379,7 +399,7 @@ class Vec3(object):
         elif key == 2:
             return self.z
         else:
-            raise IndexError("Invalid subscript "+str(key)+" to Vec3d")
+            raise IndexError("Invalid subscript "+str(key)+" to Vec3")
 
     def __setitem__(self, key, value):
         if key == 0:
@@ -389,11 +409,11 @@ class Vec3(object):
         elif key == 2:
             self.z = value
         else:
-            raise IndexError("Invalid subscript "+str(key)+" to Vec3d")
+            raise IndexError("Invalid subscript "+str(key)+" to Vec3")
 
     # String representation (for debugging)
     def __repr__(self):
-        return 'Vec3d(%s, %s, %s)' % (self.x, self.y, self.z)
+        return 'Vec3(%s, %s, %s)' % (self.x, self.y, self.z)
 
     # Comparison
     def __eq__(self, other):
@@ -413,30 +433,30 @@ class Vec3(object):
 
     # Generic operator handlers
     def _o2(self, other, f):
-        "Any two-operator operation where the left operand is a Vec3d"
-        if isinstance(other, Vec3d):
-            return Vec3d(f(self.x, other.x),
-                         f(self.y, other.y),
-                         f(self.z, other.z))
+        "Any two-operator operation where the left operand is a Vec3"
+        if isinstance(other, Vec3):
+            return Vec3(f(self.x, other.x),
+                        f(self.y, other.y),
+                        f(self.z, other.z))
         elif (hasattr(other, "__getitem__")):
-            return Vec3d(f(self.x, other[0]),
-                         f(self.y, other[1]),
-                         f(self.z, other[2]))
+            return Vec3(f(self.x, other[0]),
+                        f(self.y, other[1]),
+                        f(self.z, other[2]))
         else:
-            return Vec3d(f(self.x, other),
-                         f(self.y, other),
-                         f(self.z, other))
+            return Vec3(f(self.x, other),
+                        f(self.y, other),
+                        f(self.z, other))
 
     def _r_o2(self, other, f):
-        "Any two-operator operation where the right operand is a Vec3d"
+        "Any two-operator operation where the right operand is a Vec3"
         if (hasattr(other, "__getitem__")):
-            return Vec3d(f(other[0], self.x),
-                         f(other[1], self.y),
-                         f(other[2], self.z))
+            return Vec3(f(other[0], self.x),
+                        f(other[1], self.y),
+                        f(other[2], self.z))
         else:
-            return Vec3d(f(other, self.x),
-                         f(other, self.y),
-                         f(other, self.z))
+            return Vec3(f(other, self.x),
+                        f(other, self.y),
+                        f(other, self.z))
 
     def _io(self, other, f):
         "in-place operator"
@@ -452,16 +472,16 @@ class Vec3(object):
 
     # Addition
     def __add__(self, other):
-        if isinstance(other, Vec3d):
-            return Vec3d(self.x + other.x, self.y + other.y, self.z + other.z)
+        if isinstance(other, Vec3):
+            return Vec3(self.x + other.x, self.y + other.y, self.z + other.z)
         elif hasattr(other, "__getitem__"):
-            return Vec3d(self.x + other[0], self.y + other[1], self.z + other[2])
+            return Vec3(self.x + other[0], self.y + other[1], self.z + other[2])
         else:
-            return Vec3d(self.x + other, self.y + other, self.z + other)
+            return Vec3(self.x + other, self.y + other, self.z + other)
     __radd__ = __add__
 
     def __iadd__(self, other):
-        if isinstance(other, Vec3d):
+        if isinstance(other, Vec3):
             self.x += other.x
             self.y += other.y
             self.z += other.z
@@ -477,23 +497,23 @@ class Vec3(object):
 
     # Subtraction
     def __sub__(self, other):
-        if isinstance(other, Vec3d):
-            return Vec3d(self.x - other.x, self.y - other.y, self.z - other.z)
+        if isinstance(other, Vec3):
+            return Vec3(self.x - other.x, self.y - other.y, self.z - other.z)
         elif (hasattr(other, "__getitem__")):
-            return Vec3d(self.x - other[0], self.y - other[1], self.z - other[2])
+            return Vec3(self.x - other[0], self.y - other[1], self.z - other[2])
         else:
-            return Vec3d(self.x - other, self.y - other, self.z - other)
+            return Vec3(self.x - other, self.y - other, self.z - other)
 
     def __rsub__(self, other):
-        if isinstance(other, Vec3d):
-            return Vec3d(other.x - self.x, other.y - self.y, other.z - self.z)
+        if isinstance(other, Vec3):
+            return Vec3(other.x - self.x, other.y - self.y, other.z - self.z)
         if (hasattr(other, "__getitem__")):
-            return Vec3d(other[0] - self.x, other[1] - self.y, other[2] - self.z)
+            return Vec3(other[0] - self.x, other[1] - self.y, other[2] - self.z)
         else:
-            return Vec3d(other - self.x, other - self.y, other - self.z)
+            return Vec3(other - self.x, other - self.y, other - self.z)
 
     def __isub__(self, other):
-        if isinstance(other, Vec3d):
+        if isinstance(other, Vec3):
             self.x -= other.x
             self.y -= other.y
             self.z -= other.z
@@ -509,16 +529,16 @@ class Vec3(object):
 
     # Multiplication
     def __mul__(self, other):
-        if isinstance(other, Vec3d):
-            return Vec3d(self.x*other.x, self.y*other.y, self.z*other.z)
+        if isinstance(other, Vec3):
+            return Vec3(self.x*other.x, self.y*other.y, self.z*other.z)
         if (hasattr(other, "__getitem__")):
-            return Vec3d(self.x*other[0], self.y*other[1], self.z*other[2])
+            return Vec3(self.x*other[0], self.y*other[1], self.z*other[2])
         else:
-            return Vec3d(self.x*other, self.y*other, self.z*other)
+            return Vec3(self.x*other, self.y*other, self.z*other)
     __rmul__ = __mul__
 
     def __imul__(self, other):
-        if isinstance(other, Vec3d):
+        if isinstance(other, Vec3):
             self.x *= other.x
             self.y *= other.y
             self.z *= other.z
@@ -607,16 +627,16 @@ class Vec3(object):
 
     # Unary operations
     def __neg__(self):
-        return Vec3d(operator.neg(self.x), operator.neg(self.y), operator.neg(self.z))
+        return Vec3(operator.neg(self.x), operator.neg(self.y), operator.neg(self.z))
 
     def __pos__(self):
-        return Vec3d(operator.pos(self.x), operator.pos(self.y), operator.pos(self.z))
+        return Vec3(operator.pos(self.x), operator.pos(self.y), operator.pos(self.z))
 
     def __abs__(self):
-        return Vec3d(abs(self.x), abs(self.y), abs(self.z))
+        return Vec3(abs(self.x), abs(self.y), abs(self.z))
 
     def __invert__(self):
-        return Vec3d(-self.x, -self.y, -self.z)
+        return Vec3(-self.x, -self.y, -self.z)
 
     # vector functions
     def get_length_sqrd(self):
@@ -666,7 +686,7 @@ class Vec3(object):
         sin = math.sin(radians)
         x = self.x*cos - self.y*sin
         y = self.x*sin + self.y*cos
-        return Vec3d(x, y, self.z)
+        return Vec3(x, y, self.z)
 
     def rotated_around_x(self, angle_degrees):
         radians = math.radians(angle_degrees)
@@ -674,7 +694,7 @@ class Vec3(object):
         sin = math.sin(radians)
         y = self.y*cos - self.z*sin
         z = self.y*sin + self.z*cos
-        return Vec3d(self.x, y, z)
+        return Vec3(self.x, y, z)
 
     def rotated_around_y(self, angle_degrees):
         radians = math.radians(angle_degrees)
@@ -682,7 +702,7 @@ class Vec3(object):
         sin = math.sin(radians)
         z = self.z*cos - self.x*sin
         x = self.z*sin + self.x*cos
-        return Vec3d(x, self.y, z)
+        return Vec3(x, self.y, z)
 
     def get_angle_around_z(self):
         if (self.get_length_sqrd() == 0):
@@ -722,7 +742,7 @@ class Vec3(object):
 
     def get_angle_between(self, other):
         v1 = self.normalized()
-        v2 = Vec3d(other)
+        v2 = Vec3(other)
         v2.normalize_return_length()
         return math.degrees(math.acos(v1.dot(v2)))
 
@@ -730,7 +750,7 @@ class Vec3(object):
         length = self.length
         if length != 0:
             return self/length
-        return Vec3d(self)
+        return Vec3(self)
 
     def normalize_return_length(self):
         length = self.length
@@ -756,15 +776,15 @@ class Vec3(object):
         return other*(projected_length_times_other_length/other_length_sqrd)
 
     def cross(self, other):
-        return Vec3d(self.y*other[2] - self.z*other[1], self.z*other[0] - self.x*other[2], self.x*other[1] - self.y*other[0])
+        return Vec3(self.y*other[2] - self.z*other[1], self.z*other[0] - self.x*other[2], self.x*other[1] - self.y*other[0])
 
     def interpolate_to(self, other, range):
-        return Vec3d(self.x + (other[0] - self.x)*range, self.y + (other[1] - self.y)*range, self.z + (other[2] - self.z)*range)
+        return Vec3(self.x + (other[0] - self.x)*range, self.y + (other[1] - self.y)*range, self.z + (other[2] - self.z)*range)
 
     def convert_to_basis(self, x_vector, y_vector, z_vector):
-        return Vec3d(self.dot(x_vector)/x_vector.get_length_sqrd(),
-                     self.dot(y_vector)/y_vector.get_length_sqrd(),
-                     self.dot(z_vector)/z_vector.get_length_sqrd())
+        return Vec3(self.dot(x_vector)/x_vector.get_length_sqrd(),
+                    self.dot(y_vector)/y_vector.get_length_sqrd(),
+                    self.dot(z_vector)/z_vector.get_length_sqrd())
 
     def __getstate__(self):
         return [self.x, self.y, self.z]
