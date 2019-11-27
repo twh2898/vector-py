@@ -351,7 +351,7 @@ class Vec2(object):
 # http://www.pygame.org/wiki/3DVectorClass
 
 
-class Vec3d(object):
+class Vec3(object):
     """3d vector class, supports vector and scalar operators,
             and also provides a bunch of high level functions.
             reproduced from the vec2d class on the pygame wiki site.
