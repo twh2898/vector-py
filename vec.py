@@ -4,6 +4,20 @@ import operator
 # http://www.pygame.org/wiki/2DVectorClass
 
 
+def as_vec2(obj):
+    if isinstance(obj, Vec2):
+        return obj
+    else:
+        return Vec2(obj)
+
+
+def as_vec3(obj):
+    if isinstance(obj, Vec3):
+        return obj
+    else:
+        return Vec3(obj)
+
+
 class Vec2(object):
     """2d vector class, supports vector and scalar operators,
        and also provides a bunch of high level functions
