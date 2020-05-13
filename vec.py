@@ -48,7 +48,7 @@ class Vec2(object):
         elif key == 1:
             return self.y
         else:
-            raise IndexError("Invalid subscript "+str(key)+" to Vec2")
+            raise IndexError("Invalid subscript " + str(key) + " to Vec2")
 
     def __setitem__(self, key, value):
         if key == 0:
@@ -56,7 +56,7 @@ class Vec2(object):
         elif key == 1:
             self.y = value
         else:
-            raise IndexError("Invalid subscript "+str(key)+" to Vec2")
+            raise IndexError("Invalid subscript " + str(key) + " to Vec2")
 
     # String representation (for debugging)
     def __repr__(self):
@@ -118,6 +118,7 @@ class Vec2(object):
             return Vec2(self.x + other[0], self.y + other[1])
         else:
             return Vec2(self.x + other, self.y + other)
+
     __radd__ = __add__
 
     def __iadd__(self, other):
@@ -164,11 +165,12 @@ class Vec2(object):
     # Multiplication
     def __mul__(self, other):
         if isinstance(other, Vec2):
-            return Vec2(self.x*other.x, self.y*other.y)
+            return Vec2(self.x * other.x, self.y * other.y)
         if (hasattr(other, "__getitem__")):
-            return Vec2(self.x*other[0], self.y*other[1])
+            return Vec2(self.x * other[0], self.y * other[1])
         else:
-            return Vec2(self.x*other, self.y*other)
+            return Vec2(self.x * other, self.y * other)
+
     __rmul__ = __mul__
 
     def __imul__(self, other):
@@ -246,14 +248,17 @@ class Vec2(object):
 
     def __and__(self, other):
         return self._o2(other, operator.and_)
+
     __rand__ = __and__
 
     def __or__(self, other):
         return self._o2(other, operator.or_)
+
     __ror__ = __or__
 
     def __xor__(self, other):
         return self._o2(other, operator.xor)
+
     __rxor__ = __xor__
 
     # Unary operations
@@ -271,15 +276,16 @@ class Vec2(object):
 
     # vector functions
     def get_length_sqrd(self):
-        return self.x**2 + self.y**2
+        return self.x ** 2 + self.y ** 2
 
     def get_length(self):
-        return math.sqrt(self.x**2 + self.y**2)
+        return math.sqrt(self.x ** 2 + self.y ** 2)
 
     def __setlength(self, value):
         length = self.get_length()
-        self.x *= value/length
-        self.y *= value/length
+        self.x *= value / length
+        self.y *= value / length
+
     length = property(get_length, __setlength, None,
                       "gets or sets the magnitude of the vector")
 
@@ -287,8 +293,8 @@ class Vec2(object):
         radians = math.radians(angle_degrees)
         cos = math.cos(radians)
         sin = math.sin(radians)
-        x = self.x*cos - self.y*sin
-        y = self.x*sin + self.y*cos
+        x = self.x * cos - self.y * sin
+        y = self.x * sin + self.y * cos
         self.x = x
         self.y = y
 
@@ -296,8 +302,8 @@ class Vec2(object):
         radians = math.radians(angle_degrees)
         cos = math.cos(radians)
         sin = math.sin(radians)
-        x = self.x*cos - self.y*sin
-        y = self.x*sin + self.y*cos
+        x = self.x * cos - self.y * sin
+        y = self.x * sin + self.y * cos
         return Vec2(x, y)
 
     def get_angle(self):
@@ -309,18 +315,19 @@ class Vec2(object):
         self.x = self.length
         self.y = 0
         self.rotate(angle_degrees)
+
     angle = property(get_angle, __setangle, None,
                      "gets or sets the angle of a vector")
 
     def get_angle_between(self, other):
-        cross = self.x*other[1] - self.y*other[0]
-        dot = self.x*other[0] + self.y*other[1]
+        cross = self.x * other[1] - self.y * other[0]
+        dot = self.x * other[0] + self.y * other[1]
         return math.degrees(math.atan2(cross, dot))
 
     def normalized(self):
         length = self.length
         if length != 0:
-            return self/length
+            return self / length
         return Vec2(self)
 
     def normalize_return_length(self):
@@ -336,31 +343,31 @@ class Vec2(object):
     def perpendicular_normal(self):
         length = self.length
         if length != 0:
-            return Vec2(-self.y/length, self.x/length)
+            return Vec2(-self.y / length, self.x / length)
         return Vec2(self)
 
     def dot(self, other):
-        return float(self.x*other[0] + self.y*other[1])
+        return float(self.x * other[0] + self.y * other[1])
 
     def get_distance(self, other):
-        return math.sqrt((self.x - other[0])**2 + (self.y - other[1])**2)
+        return math.sqrt((self.x - other[0]) ** 2 + (self.y - other[1]) ** 2)
 
     def get_dist_sqrd(self, other):
-        return (self.x - other[0])**2 + (self.y - other[1])**2
+        return (self.x - other[0]) ** 2 + (self.y - other[1]) ** 2
 
     def projection(self, other):
-        other_length_sqrd = other[0]*other[0] + other[1]*other[1]
+        other_length_sqrd = other[0] * other[0] + other[1] * other[1]
         projected_length_times_other_length = self.dot(other)
-        return other*(projected_length_times_other_length/other_length_sqrd)
+        return other * (projected_length_times_other_length / other_length_sqrd)
 
     def cross(self, other):
-        return self.x*other[1] - self.y*other[0]
+        return self.x * other[1] - self.y * other[0]
 
     def interpolate_to(self, other, range):
-        return Vec2(self.x + (other[0] - self.x)*range, self.y + (other[1] - self.y)*range)
+        return Vec2(self.x + (other[0] - self.x) * range, self.y + (other[1] - self.y) * range)
 
     def convert_to_basis(self, x_vector, y_vector):
-        return Vec2(self.dot(x_vector)/x_vector.get_length_sqrd(), self.dot(y_vector)/y_vector.get_length_sqrd())
+        return Vec2(self.dot(x_vector) / x_vector.get_length_sqrd(), self.dot(y_vector) / y_vector.get_length_sqrd())
 
     def __getstate__(self):
         return [self.x, self.y]
@@ -413,7 +420,7 @@ class Vec3(object):
         elif key == 2:
             return self.z
         else:
-            raise IndexError("Invalid subscript "+str(key)+" to Vec3")
+            raise IndexError("Invalid subscript " + str(key) + " to Vec3")
 
     def __setitem__(self, key, value):
         if key == 0:
@@ -423,7 +430,7 @@ class Vec3(object):
         elif key == 2:
             self.z = value
         else:
-            raise IndexError("Invalid subscript "+str(key)+" to Vec3")
+            raise IndexError("Invalid subscript " + str(key) + " to Vec3")
 
     # String representation (for debugging)
     def __repr__(self):
@@ -492,6 +499,7 @@ class Vec3(object):
             return Vec3(self.x + other[0], self.y + other[1], self.z + other[2])
         else:
             return Vec3(self.x + other, self.y + other, self.z + other)
+
     __radd__ = __add__
 
     def __iadd__(self, other):
@@ -544,11 +552,12 @@ class Vec3(object):
     # Multiplication
     def __mul__(self, other):
         if isinstance(other, Vec3):
-            return Vec3(self.x*other.x, self.y*other.y, self.z*other.z)
+            return Vec3(self.x * other.x, self.y * other.y, self.z * other.z)
         if (hasattr(other, "__getitem__")):
-            return Vec3(self.x*other[0], self.y*other[1], self.z*other[2])
+            return Vec3(self.x * other[0], self.y * other[1], self.z * other[2])
         else:
-            return Vec3(self.x*other, self.y*other, self.z*other)
+            return Vec3(self.x * other, self.y * other, self.z * other)
+
     __rmul__ = __mul__
 
     def __imul__(self, other):
@@ -629,14 +638,17 @@ class Vec3(object):
 
     def __and__(self, other):
         return self._o2(other, operator.and_)
+
     __rand__ = __and__
 
     def __or__(self, other):
         return self._o2(other, operator.or_)
+
     __ror__ = __or__
 
     def __xor__(self, other):
         return self._o2(other, operator.xor)
+
     __rxor__ = __xor__
 
     # Unary operations
@@ -654,16 +666,17 @@ class Vec3(object):
 
     # vector functions
     def get_length_sqrd(self):
-        return self.x**2 + self.y**2 + self.z**2
+        return self.x ** 2 + self.y ** 2 + self.z ** 2
 
     def get_length(self):
-        return math.sqrt(self.x**2 + self.y**2 + self.z**2)
+        return math.sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2)
 
     def __setlength(self, value):
         length = self.get_length()
-        self.x *= value/length
-        self.y *= value/length
-        self.z *= value/length
+        self.x *= value / length
+        self.y *= value / length
+        self.z *= value / length
+
     length = property(get_length, __setlength, None,
                       "gets or sets the magnitude of the vector")
 
@@ -671,8 +684,8 @@ class Vec3(object):
         radians = math.radians(angle_degrees)
         cos = math.cos(radians)
         sin = math.sin(radians)
-        x = self.x*cos - self.y*sin
-        y = self.x*sin + self.y*cos
+        x = self.x * cos - self.y * sin
+        y = self.x * sin + self.y * cos
         self.x = x
         self.y = y
 
@@ -680,8 +693,8 @@ class Vec3(object):
         radians = math.radians(angle_degrees)
         cos = math.cos(radians)
         sin = math.sin(radians)
-        y = self.y*cos - self.z*sin
-        z = self.y*sin + self.z*cos
+        y = self.y * cos - self.z * sin
+        z = self.y * sin + self.z * cos
         self.y = y
         self.z = z
 
@@ -689,8 +702,8 @@ class Vec3(object):
         radians = math.radians(angle_degrees)
         cos = math.cos(radians)
         sin = math.sin(radians)
-        z = self.z*cos - self.x*sin
-        x = self.z*sin + self.x*cos
+        z = self.z * cos - self.x * sin
+        x = self.z * sin + self.x * cos
         self.z = z
         self.x = x
 
@@ -698,24 +711,24 @@ class Vec3(object):
         radians = math.radians(angle_degrees)
         cos = math.cos(radians)
         sin = math.sin(radians)
-        x = self.x*cos - self.y*sin
-        y = self.x*sin + self.y*cos
+        x = self.x * cos - self.y * sin
+        y = self.x * sin + self.y * cos
         return Vec3(x, y, self.z)
 
     def rotated_around_x(self, angle_degrees):
         radians = math.radians(angle_degrees)
         cos = math.cos(radians)
         sin = math.sin(radians)
-        y = self.y*cos - self.z*sin
-        z = self.y*sin + self.z*cos
+        y = self.y * cos - self.z * sin
+        z = self.y * sin + self.z * cos
         return Vec3(self.x, y, z)
 
     def rotated_around_y(self, angle_degrees):
         radians = math.radians(angle_degrees)
         cos = math.cos(radians)
         sin = math.sin(radians)
-        z = self.z*cos - self.x*sin
-        x = self.z*sin + self.x*cos
+        z = self.z * cos - self.x * sin
+        x = self.z * sin + self.x * cos
         return Vec3(x, self.y, z)
 
     def get_angle_around_z(self):
@@ -724,9 +737,10 @@ class Vec3(object):
         return math.degrees(math.atan2(self.y, self.x))
 
     def __setangle_around_z(self, angle_degrees):
-        self.x = math.sqrt(self.x**2 + self.y**2)
+        self.x = math.sqrt(self.x ** 2 + self.y ** 2)
         self.y = 0
         self.rotate_around_z(angle_degrees)
+
     angle_around_z = property(get_angle_around_z, __setangle_around_z,
                               None, "gets or sets the angle of a vector in the XY plane")
 
@@ -736,9 +750,10 @@ class Vec3(object):
         return math.degrees(math.atan2(self.z, self.y))
 
     def __setangle_around_x(self, angle_degrees):
-        self.y = math.sqrt(self.y**2 + self.z**2)
+        self.y = math.sqrt(self.y ** 2 + self.z ** 2)
         self.z = 0
         self.rotate_around_x(angle_degrees)
+
     angle_around_x = property(get_angle_around_x, __setangle_around_x,
                               None, "gets or sets the angle of a vector in the YZ plane")
 
@@ -748,9 +763,10 @@ class Vec3(object):
         return math.degrees(math.atan2(self.x, self.z))
 
     def __setangle_around_y(self, angle_degrees):
-        self.z = math.sqrt(self.z**2 + self.x**2)
+        self.z = math.sqrt(self.z ** 2 + self.x ** 2)
         self.x = 0
         self.rotate_around_y(angle_degrees)
+
     angle_around_y = property(get_angle_around_y, __setangle_around_y,
                               None, "gets or sets the angle of a vector in the ZX plane")
 
@@ -763,7 +779,7 @@ class Vec3(object):
     def normalized(self):
         length = self.length
         if length != 0:
-            return self/length
+            return self / length
         return Vec3(self)
 
     def normalize_return_length(self):
@@ -775,33 +791,42 @@ class Vec3(object):
         return length
 
     def dot(self, other):
-        return float(self.x*other[0] + self.y*other[1] + self.z*other[2])
+        return float(self.x * other[0] + self.y * other[1] + self.z * other[2])
 
     def get_distance(self, other):
-        return math.sqrt((self.x - other[0])**2 + (self.y - other[1])**2 + (self.z - other[2])**2)
+        return math.sqrt((self.x - other[0]) ** 2 + (self.y - other[1]) ** 2 + (self.z - other[2]) ** 2)
 
     def get_dist_sqrd(self, other):
-        return (self.x - other[0])**2 + (self.y - other[1])**2 + (self.z - other[2])**2
+        return (self.x - other[0]) ** 2 + (self.y - other[1]) ** 2 + (self.z - other[2]) ** 2
 
     def projection(self, other):
-        other_length_sqrd = other[0]*other[0] + \
-            other[1]*other[1] + other[2]*other[2]
+        other_length_sqrd = other[0] * other[0] + \
+                            other[1] * other[1] + other[2] * other[2]
         projected_length_times_other_length = self.dot(other)
-        return other*(projected_length_times_other_length/other_length_sqrd)
+        return other * (projected_length_times_other_length / other_length_sqrd)
 
     def cross(self, other):
-        return Vec3(self.y*other[2] - self.z*other[1], self.z*other[0] - self.x*other[2], self.x*other[1] - self.y*other[0])
+        return Vec3(self.y * other[2] - self.z * other[1], self.z * other[0] - self.x * other[2],
+                    self.x * other[1] - self.y * other[0])
 
     def interpolate_to(self, other, range):
-        return Vec3(self.x + (other[0] - self.x)*range, self.y + (other[1] - self.y)*range, self.z + (other[2] - self.z)*range)
+        return Vec3(self.x + (other[0] - self.x) * range, self.y + (other[1] - self.y) * range,
+                    self.z + (other[2] - self.z) * range)
 
     def convert_to_basis(self, x_vector, y_vector, z_vector):
-        return Vec3(self.dot(x_vector)/x_vector.get_length_sqrd(),
-                    self.dot(y_vector)/y_vector.get_length_sqrd(),
-                    self.dot(z_vector)/z_vector.get_length_sqrd())
+        return Vec3(self.dot(x_vector) / x_vector.get_length_sqrd(),
+                    self.dot(y_vector) / y_vector.get_length_sqrd(),
+                    self.dot(z_vector) / z_vector.get_length_sqrd())
 
     def __getstate__(self):
         return [self.x, self.y, self.z]
 
     def __setstate__(self, dict):
         self.x, self.y, self.z = dict
+
+# Types
+
+from typing import NewType, Tuple, Union
+
+vec2_like = NewType('vec2_like', Union[Vec2, Tuple[float, float]])
+vec3_like = NewType('vec3_like', Union[Vec3, Tuple[float, float, float]])
